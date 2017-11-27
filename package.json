@@ -1,0 +1,33 @@
+{
+  "name": "spd-ssr-cli",
+  "version": "1.0.0",
+  "description": "generate ssr page",
+  "bin": {
+    "spd-ssr": "bin/ssr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/supaide/spd-ssr-cli.git"
+  },
+  "keywords": [
+    "ssr",
+    "vue"
+  ],
+  "author": "cyij",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/supaide/spd-ssr-cli/issues"
+  },
+  "homepage": "https://github.com/supaide/spd-ssr-cli#readme",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "cross-env": "^5.1.1",
+    "express": "^4.16.2",
+    "mkdirp": "^0.5.1",
+    "object-assign": "^4.1.1",
+    "phantomjs-prebuilt": "^2.1.16"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}

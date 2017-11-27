@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const path = require('path')
+const Server = require('../lib/server')
+
+let root = '/Users/cyij/tmp/tmp/my-project/dist'
+let port = 3000
+let options = {
+  root: '/Users/cyij/tmp/tmp/my-project/dist',
+  port: 3000,
+  captureAfterTime: 100
+}
+
+let routers = ['/home', '/index']
+
+const app = new Server(options)
+app.start(routers, function (router, html) {
+  console.log(html)
+}, function () {
+  console.log('all finished')
+})
+
+//setTimeout(function() {app.stop()}, 1000)
