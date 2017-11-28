@@ -2,10 +2,39 @@
 const fs = require('fs')
 const path = require('path')
 const Server = require('../lib/server')
+const program = require('commander')
+const chalk = require('chalk')
+const ora = require('ora')
 
-let root = '/Users/cyij/tmp/tmp/my-project/dist'
-let port = 3000
+program
+  .usage('<root-path> <dest-path> <routers.json>')
+  .option('-i, --index <index>', 'index page, default "index.html"')
+  .option('-s, --static <static>', 'resource dir, default "static"')
+  .option('-p, --port <port>', 'port of inner www server, default 3000')
+  .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request, default 100')
+
+program.on('--help', () => {})
+
+function help () {
+  program.parse(process.argv)
+  if (program.args.length < 3) {
+    return program.help()
+  }
+}
+help()
+
 let options = {
+  root: program.args[0],
+  dest: program.args[1],
+  routers: program.args[2],
+  index: program.index || 'index.html',
+  static: program.static || 'static',
+  port: program.port || 3000,
+  asyncTime: program.asyncTime || 100
+}
+
+//let root = '/Users/cyij/tmp/tmp/my-project/dist'
+let options0 = {
   root: '/Users/cyij/tmp/tmp/my-project/dist',
   port: 3000,
   captureAfterTime: 100
@@ -14,10 +43,11 @@ let options = {
 let routers = ['/home', '/index']
 
 const app = new Server(options)
-app.start(routers, function (router, html) {
+app.start(routers, function (html) {
   console.log(html)
 }, function () {
   console.log('all finished')
+  process.exit()
 })
 
 //setTimeout(function() {app.stop()}, 1000)
