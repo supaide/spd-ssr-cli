@@ -11,6 +11,8 @@ program
   .option('-i, --index <index>', 'index page, default "index.html"')
   .option('-s, --static <static>', 'resource dir, default "static"')
   .option('-p, --port <port>', 'port of inner www server, default 3000')
+  .option('-r, --root-id <root-id>', 'the root element id, default "app"')
+  .option('-l, --lang [php|nodejs|$file-path|none]', 'template engine support, default "php"')
   .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request, default 100')
 
 program.on('--help', () => {})
@@ -30,9 +32,14 @@ let options = {
   index: program.index || 'index.html',
   static: program.static || 'static',
   port: program.port || 3000,
+  lang: program.lang || 'php',
+  rootId: program.rootId || 'app',
   asyncTime: program.asyncTime || 100
 }
 
+if (options.lang !== 'php' && options.lang !== 'nodejs' && options.lang !== 'none') {
+  options.lang = path.join(process.cwd() + '/', options.lang)
+}
 if (!path.isAbsolute(options.root)) {
   options.root = path.join(process.cwd(), options.root)
 }
@@ -63,8 +70,25 @@ if (!fs.existsSync(options.routers)) {
 options.logFile = options.root + '/__ssr_log'
 fs.writeFileSync(options.logFile, '')
 
+var cursor = 0
+var showLog = function () {
+  fs.open(options.logFile , 'r' , function (err, fd) {
+    var buf = new Buffer(10240)
+    var size = fs.readSync(fd, buf, 0, 10240, cursor);
+    if (size > 0) {
+      cursor += size
+      console.log(buf.toString())
+    }
+  })
+}
+
+var interval = setInterval(showLog, 30)
+
 var onExit = function () {
-  //fs.unlinkSync(options.logFile)
+  if (interval) {
+    clearInterval(interval)
+  }
+  fs.unlinkSync(options.logFile)
 }
 
 process.on('SIGINT', () => {
