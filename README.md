@@ -18,7 +18,6 @@ Options:
     -l, --lang [php|nodejs|$filepath|none]  dynamic data rendering engine support. (default: php)
                                             use "none" for none-dynamic data or define the render code in $filepath
     -t, --async-time <async-time>           get the page source after [async-time] milliseconds because of the async request (default: 100)
-    -p, --port <port>                       port of inner www server (default: 3000)
     -h, --help                              output usage information
 ```
 
