@@ -14,7 +14,6 @@ program
   .option('-l, --lang [php|nodejs|$filepath|none]', 'dynamic data rendering engine support.', 'php')
   .option(' ', 'use "none" for none-dynamic data or define the render code in $filepath')
   .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request', 100)
-  .option('-p, --port <port>', 'port of inner www server', 3000)
 
 program.on('--help', () => {})
 
@@ -32,7 +31,6 @@ let options = {
   routers: program.args[2],
   index: program.index,
   static: program.static,
-  port: program.port,
   lang: program.lang,
   rootId: program.rootId,
   asyncTime: program.asyncTime
