@@ -8,12 +8,13 @@ const ora = require('ora')
 
 program
   .usage('<root-path> <dest-path> <routers.json>')
-  .option('-i, --index <index>', 'index page, default "index.html"')
-  .option('-s, --static <static>', 'resource dir, default "static"')
-  .option('-p, --port <port>', 'port of inner www server, default 3000')
-  .option('-r, --root-id <root-id>', 'the root element id, default "app"')
-  .option('-l, --lang [php|nodejs|$file-path|none]', 'template engine support, default "php"')
-  .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request, default 100')
+  .option('-i, --index <index>', 'index page', ['index.html'])
+  .option('-s, --static <static>', 'resource dir', ['static'])
+  .option('-r, --root-id <root-id>', 'the root element id', ['app'])
+  .option('-l, --lang [php|nodejs|$filepath|none]', 'dynamic data rendering engine support.', ['php'])
+  .option(' ', 'use "none" for none-dynamic data or define the render code in $filepath', ['php'])
+  .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request', [100])
+  .option('-p, --port <port>', 'port of inner www server', [3000])
 
 program.on('--help', () => {})
 
