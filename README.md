@@ -1,4 +1,5 @@
 参考 [prerender-spa-plugin](https://github.com/chrisvfritz/prerender-spa-plugin) 提供服务端页面模版生成的工具
+
 生成的模版文件可以给服务器提供页面模版，php代码参考[spd-ssr-php](https://github.com/supaide/spd-ssr-php)
 
 ## 安装
