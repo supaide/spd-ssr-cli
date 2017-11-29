@@ -19,3 +19,7 @@ Options:
     -p, --port <port>                       port of inner www server (default: 3000)
     -h, --help                              output usage information
 ```
+
+## 模版文件发布
+   - 将ssr_template目录下的模版文件拷贝值服务器或CDN
+   - php 服务器代码参考 [spd-ssr-php](https://github.com/supaide/spd-ssr-php)
