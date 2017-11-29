@@ -33,21 +33,53 @@ let options = {
   asyncTime: program.asyncTime || 100
 }
 
-//let root = '/Users/cyij/tmp/tmp/my-project/dist'
-let options0 = {
-  root: '/Users/cyij/tmp/tmp/my-project/dist',
-  port: 3000,
-  captureAfterTime: 100
+if (!path.isAbsolute(options.root)) {
+  options.root = path.join(process.cwd(), options.root)
+}
+if (!path.isAbsolute(options.dest)) {
+  options.dest = path.join(process.cwd(), options.dest)
+}
+if (!path.isAbsolute(options.routers)) {
+  options.routers = path.join(process.cwd(), options.routers)
 }
 
-let routers = ['/home', '/index']
-
-const app = new Server(options)
-app.start(routers, function (html) {
-  console.log(html)
-}, function () {
-  console.log('all finished')
+var error = function (msg) {
+  console.log(chalk.yellow('Error: '+msg))
   process.exit()
+}
+
+if (!fs.existsSync(options.root)) {
+  error('the root path ['+options.root+'] is not exist!')
+}
+
+if (!fs.existsSync(options.dest)) {
+  error('the dest path ['+options.dest+'] is not exist!')
+}
+
+if (!fs.existsSync(options.routers)) {
+  error('the router file ['+options.routers+'] is not exist!')
+}
+
+options.logFile = options.root + '/__ssr_log'
+fs.writeFileSync(options.logFile, '')
+
+var onExit = function () {
+  //fs.unlinkSync(options.logFile)
+}
+
+process.on('SIGINT', () => {
+  onExit()
 })
 
-//setTimeout(function() {app.stop()}, 1000)
+process.on('exit', () => {
+  onExit()
+})
+
+const app = new Server(options)
+app.start(function (html) {
+  console.log(html)
+  process.exit()
+}, function (error) {
+  console.log(chalk.yellow('Error: '+error))
+  process.exit()
+})
