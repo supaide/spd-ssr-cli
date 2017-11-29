@@ -8,13 +8,13 @@ const ora = require('ora')
 
 program
   .usage('<root-path> <dest-path> <routers.json>')
-  .option('-i, --index <index>', 'index page', ['index.html'])
-  .option('-s, --static <static>', 'resource dir', ['static'])
-  .option('-r, --root-id <root-id>', 'the root element id', ['app'])
-  .option('-l, --lang [php|nodejs|$filepath|none]', 'dynamic data rendering engine support.', ['php'])
-  .option(' ', 'use "none" for none-dynamic data or define the render code in $filepath', ['php'])
-  .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request', [100])
-  .option('-p, --port <port>', 'port of inner www server', [3000])
+  .option('-i, --index <index>', 'index page', 'index.html')
+  .option('-s, --static <static>', 'resource dir', 'static')
+  .option('-r, --root-id <root-id>', 'the root element id', 'app')
+  .option('-l, --lang [php|nodejs|$filepath|none]', 'dynamic data rendering engine support.', 'php')
+  .option(' ', 'use "none" for none-dynamic data or define the render code in $filepath')
+  .option('-t, --async-time <async-time>', 'get the page source after [async-time] milliseconds because of the async request', 100)
+  .option('-p, --port <port>', 'port of inner www server', 3000)
 
 program.on('--help', () => {})
 
@@ -30,12 +30,12 @@ let options = {
   root: program.args[0],
   dest: program.args[1],
   routers: program.args[2],
-  index: program.index || 'index.html',
-  static: program.static || 'static',
-  port: program.port || 3000,
-  lang: program.lang || 'php',
-  rootId: program.rootId || 'app',
-  asyncTime: program.asyncTime || 100
+  index: program.index,
+  static: program.static,
+  port: program.port,
+  lang: program.lang,
+  rootId: program.rootId,
+  asyncTime: program.asyncTime
 }
 
 if (options.lang !== 'php' && options.lang !== 'nodejs' && options.lang !== 'none') {
@@ -66,6 +66,29 @@ if (!fs.existsSync(options.dest)) {
 
 if (!fs.existsSync(options.routers)) {
   error('the router file ['+options.routers+'] is not exist!')
+}
+
+var rmdir = function (path0) {
+  if( fs.existsSync(path0) ) {
+    fs.readdirSync(path0).forEach(function(file, index){
+      var curPath = path.join(path0, file)
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        rmdir(curPath)
+      } else { // delete file
+        fs.unlinkSync(curPath)
+      }
+    });
+    fs.rmdirSync(path0)
+  }
+}
+
+options.dest = path.join(options.dest+'/', 'ssr_template')
+if (fs.existsSync(options.dest)) {
+  rmdir(options.dest)
+}
+fs.mkdirSync(options.dest)
+if (!fs.existsSync(options.dest)) {
+  error('the dest path ['+options.dest+'] is not exist!')
 }
 
 options.logFile = options.root + '/__ssr_log'
