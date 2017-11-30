@@ -11,14 +11,19 @@ npm i spd-ssr-cli -g  // 注：工具发布在内部仓库，http://120.132.50.1
 ```
 Usage: spd-ssr <root-path> <dest-path> <routers.json>
 
+       root-path: 项目编译后的代码目录
+       dest-path: 页面模版存放目录；当dest-path为绝对路径时，会自动同步项目的static目录
+       routers.json 项目生成的url路径列表；使用spd-page-manage时，该文件是src/pages.js.json
+
 Options:
-    -i, --index <index>                     index page (default: index.html)
-    -s, --static <static>                   resource dir (default: static)
-    -r, --root-id <root-id>                 the root element id (default: app)
-    -l, --lang [php|nodejs|$filepath|none]  dynamic data rendering engine support. (default: php)
-                                            use "none" for none-dynamic data or define the render code in $filepath
-    -t, --async-time <async-time>           get the page source after [async-time] milliseconds because of the async request (default: 100)
-    -h, --help                              output usage information
+
+  -i, --index <index>                     项目入口文件名 (default: index.html)
+  -s, --static <static>                   静态资源文件目录名 (default: static)
+  -r, --root-id <root-id>                 Dom树根节点Id名 (default: app)
+  -l, --lang [php|nodejs|$filepath|none]  页面模版动态数据赋值语法，默认支持php (default: php)
+                                          可以通过$filepath指定语法定义文件；如果无动态数据需求，选择none参数
+  -t, --async-time <async-time>           代码分割导致的异步加载，需要指定setTimeout时间 (default: 100)
+  -h, --help                              output usage information
 ```
 
 ## 模版文件发布
