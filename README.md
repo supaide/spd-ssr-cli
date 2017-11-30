@@ -21,7 +21,7 @@ Options:
   -s, --static <static>                   静态资源文件目录名 (default: static)
   -r, --root-id <root-id>                 Dom树根节点Id名 (default: app)
   -l, --lang [php|nodejs|$filepath|none]  页面模版动态数据赋值语法，默认支持php (default: php)
-                                            可以通过$filepath指定语法定义文件；如果无动态数据需求，选择none参数
+                                          可以通过$filepath指定语法定义文件；如果无动态数据需求，选择none参数
   -t, --async-time <async-time>           代码分割导致的异步加载，需要指定setTimeout时间 (default: 100)
   -h, --help                              output usage information
 ```
