@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
-const Server = require('../lib/server')
+const server = require('../lib/server')
 const program = require('commander')
 const chalk = require('chalk')
 const ora = require('ora')
@@ -44,12 +44,12 @@ var copydir = function (srcPath, destPath) {
     fs.readdirSync(srcPath).forEach(function(file, index){
       var curSrcPath = path.join(srcPath, file)
       var curDestPath = path.join(destPath, file)
-      if(fs.lstatSync(curSrcPath).isDirectory()) { // recurse
+      if(fs.lstatSync(curSrcPath).isDirectory()) {
         if (!fs.existsSync(curDestPath)) {
           fs.mkdirSync(curDestPath)
         }
         copydir(curSrcPath, curDestPath)
-      } else { // delete file
+      } else {
         fs.copyFileSync(curSrcPath, curDestPath)
       }
     })
@@ -60,9 +60,9 @@ var rmdir = function (path0) {
   if( fs.existsSync(path0) ) {
     fs.readdirSync(path0).forEach(function(file, index){
       var curPath = path.join(path0, file)
-      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+      if(fs.lstatSync(curPath).isDirectory()) {
         rmdir(curPath)
-      } else { // delete file
+      } else {
         fs.unlinkSync(curPath)
       }
     })
@@ -147,7 +147,7 @@ process.on('exit', () => {
   onExit()
 })
 
-const app = new Server(options)
+const app = new server(options)
 app.start(function (html) {
   console.log(html)
   process.exit()
