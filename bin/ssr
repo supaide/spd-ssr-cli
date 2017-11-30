@@ -36,14 +36,52 @@ let options = {
   asyncTime: program.asyncTime
 }
 
+var copydir = function (srcPath, destPath) {
+  if( fs.existsSync(srcPath) ) {
+    fs.readdirSync(srcPath).forEach(function(file, index){
+      var curSrcPath = path.join(srcPath, file)
+      var curDestPath = path.join(destPath, file)
+      if(fs.lstatSync(curSrcPath).isDirectory()) { // recurse
+        if (!fs.existsSync(curDestPath)) {
+          fs.mkdirSync(curDestPath)
+        }
+        copydir(curSrcPath, curDestPath)
+      } else { // delete file
+        fs.copyFileSync(curSrcPath, curDestPath)
+      }
+    })
+  }
+}
+
+var rmdir = function (path0) {
+  if( fs.existsSync(path0) ) {
+    fs.readdirSync(path0).forEach(function(file, index){
+      var curPath = path.join(path0, file)
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        rmdir(curPath)
+      } else { // delete file
+        fs.unlinkSync(curPath)
+      }
+    })
+    fs.rmdirSync(path0)
+  }
+}
+
 if (options.lang !== 'php' && options.lang !== 'nodejs' && options.lang !== 'none') {
-  options.lang = path.join(process.cwd() + '/', options.lang)
+  options.lang = path.join(process.cwd(), options.lang)
 }
 if (!path.isAbsolute(options.root)) {
   options.root = path.join(process.cwd(), options.root)
 }
 if (!path.isAbsolute(options.dest)) {
-  options.dest = path.join(process.cwd(), options.dest)
+  options.dest = path.join(process.cwd(), options.dest, 'ssr_template')
+} else {
+  var resourcePath = path.join(path.dirname(options.dest), options.static)
+  if (fs.existsSync(resourcePath)) {
+    rmdir(resourcePath)
+  }
+  fs.mkdirSync(resourcePath)
+  copydir(path.join(options.root, options.static), resourcePath)
 }
 if (!path.isAbsolute(options.routers)) {
   options.routers = path.join(process.cwd(), options.routers)
@@ -66,21 +104,6 @@ if (!fs.existsSync(options.routers)) {
   error('the router file ['+options.routers+'] is not exist!')
 }
 
-var rmdir = function (path0) {
-  if( fs.existsSync(path0) ) {
-    fs.readdirSync(path0).forEach(function(file, index){
-      var curPath = path.join(path0, file)
-      if(fs.lstatSync(curPath).isDirectory()) { // recurse
-        rmdir(curPath)
-      } else { // delete file
-        fs.unlinkSync(curPath)
-      }
-    });
-    fs.rmdirSync(path0)
-  }
-}
-
-options.dest = path.join(options.dest+'/', 'ssr_template')
 if (fs.existsSync(options.dest)) {
   rmdir(options.dest)
 }
