@@ -78,6 +78,10 @@ if (!path.isAbsolute(options.root)) {
 }
 if (!path.isAbsolute(options.dest)) {
   options.dest = path.join(process.cwd(), options.dest, 'ssr_template')
+  if (fs.existsSync(options.dest)) {
+    rmdir(options.dest)
+  }
+  fs.mkdirSync(options.dest)
 } else {
   var resourcePath = path.join(path.dirname(options.dest), options.static)
   if (fs.existsSync(resourcePath)) {
